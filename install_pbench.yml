@@ -1,0 +1,37 @@
+#
+# If nodes aren't registered yet, execute with:
+#   ansible-playbook -i /usr/bin/tripleo-ansible-inventory install_pbench.yml --extra-vars "(...) do_register=true org=<org-id> --activationkey=<activation key> (...)"
+#
+#
+---
+- hosts: [ overcloud, undercloud ] # change this if you want to be more granular
+  become: true
+  any_errors_fatal: true  # will need to implement better handling
+  tasks:
+  - debug:
+      var: do_register
+  - debug:
+      var: activationkey
+  - debug: 
+      var: org
+  - name: register
+    redhat_subscription:
+      state: present
+      force_register: false
+      org_id: "{{ org | default('undefined') }}"
+      activationkey: "{{ activationkey | default('undefined') }}"
+    when: do_register is defined and do_register|bool == true
+  - name: enable repo rhel-7-server-optional-rpms 
+    shell: 
+      cmd: "subscription-manager repos --enable=rhel-7-server-optional-rpms"
+  - name: install copr plugin
+    yum:
+      name: yum-plugin-copr
+      state: latest
+  - name: enable pbench repository
+    shell:
+      cmd: "yum copr enable ndokos/pbench -y"
+  - name: install pbench-agent
+    yum:
+      name: pbench-agent
+      state: latest
