@@ -1,0 +1,15 @@
+- hosts: [ overcloud, undercloud ] # change this if you want to be more granular
+  become: true
+  any_errors_fatal: true  # will need to implement better handling
+  tasks:
+  - name: uninstall pbench-agent
+    yum:
+      name: pbench-agent
+      state: absent
+  - name: disable pbench repository
+    shell:
+      cmd: "yum copr disable ndokos/pbench -y"
+  - name: uninstall copr plugin
+    yum:
+      name: yum-plugin-copr
+      state: absent
