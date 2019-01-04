@@ -1,3 +1,22 @@
+# Copyright (C) Andreas Karis <akaris@redhat.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# How to: 
+# This will uninstall pbench_agent on the undercloud and overcloud
+# nodes.
+#
+# Adjust the list of hosts if needed. Then, execute:
+# ansible-playbook -i /usr/bin/tripleo-ansible-inventory uninstall_pbench.yml
+---
 - hosts: [ overcloud, undercloud ] # change this if you want to be more granular
   become: true
   any_errors_fatal: true  # will need to implement better handling
