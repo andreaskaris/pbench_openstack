@@ -1,6 +1,22 @@
+# Copyright (C) Andreas Karis <akaris@redhat.com>
 #
-# ansible-playbook -i inv.sh enable_root_to_root_login.yml
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
+# How to: 
+# This will enable logins from user root on the undercloud to user root on 
+# overcloud nodes. Note that this introduces a potential security breach.
+# Run this at your own risk.
+#
+# Adjust the list of hosts if needed. Then, execute:
+# ansible-playbook -i /usr/bin/tripleo-ansible-inventory enable_root_to_root_login.yml
 ---
 - hosts: [ overcloud ] # change this if you want to be more granular
   become: true
