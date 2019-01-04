@@ -1,0 +1,51 @@
+# Copyright (C) Andreas Karis <akaris@redhat.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# How to: 
+# This will disable logins from user root on the undercloud to user root on 
+# overcloud nodes. 
+#
+# Adjust the list of hosts if needed. Then, execute:
+# ansible-playbook -i /usr/bin/tripleo-ansible-inventory disable_root_to_root_login.yml
+---
+- hosts: [ overcloud ] # change this if you want to be more granular
+  become: true
+  any_errors_fatal: true  # will need to implement better handling
+  tasks:
+  - name: read /root/.ssh/id_rsa.pub
+    shell:
+      cmd: "sudo cat /root/.ssh/id_rsa.pub"
+    delegate_to: localhost
+    register: root_id_rsa_pub
+  - debug:
+      var: root_id_rsa_pub
+  - name: verify root id_rsa.pub
+    fail:
+      msg: "Could not get the root RSA pub key"
+    when: '"ssh-rsa" not in root_id_rsa_pub.stdout'
+  - name: Configure root authorized key
+    authorized_key:
+      user: root
+      state: absent
+      key: "{{ root_id_rsa_pub.stdout }}"
+  - name: set PermitRootLogin yes in /etc/ssh/sshd_config
+    lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+    notify: restart sshd
+
+  handlers:
+  - name: restart sshd
+    service:
+      name: sshd
+      state: restarted
