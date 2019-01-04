@@ -1,5 +1,5 @@
 #
-#
+# ansible-playbook -i inv.sh enable_root_to_root_login.yml
 #
 ---
 - hosts: [ overcloud ] # change this if you want to be more granular
