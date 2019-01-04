@@ -1,0 +1,36 @@
+#
+#
+#
+---
+- hosts: [ overcloud ] # change this if you want to be more granular
+  become: true
+  any_errors_fatal: true  # will need to implement better handling
+  tasks:
+  - name: read /root/.ssh/id_rsa.pub
+    shell:
+      cmd: "sudo cat /root/.ssh/id_rsa.pub"
+    delegate_to: localhost
+    register: root_id_rsa_pub
+  - debug:
+      var: root_id_rsa_pub
+  - name: verify root id_rsa.pub
+    fail:
+      msg: "Could not get the root RSA pub key"
+    when: '"ssh-rsa" not in root_id_rsa_pub.stdout'
+  - name: Configure root authorized key
+    authorized_key:
+      user: root
+      state: present
+      key: "{{ root_id_rsa_pub.stdout }}"
+  - name: set PermitRootLogin yes in /etc/ssh/sshd_config
+    lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      regexp: "^PermitRootLogin"
+      line: "PermitRootLogin yes"
+    notify: restart sshd
+
+  handlers:
+  - name: restart sshd
+    service:
+      name: sshd
+      state: restarted
