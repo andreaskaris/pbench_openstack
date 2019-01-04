@@ -19,7 +19,7 @@
 #
 # If nodes aren't registered yet, execute with:
 # ansible-playbook -i /usr/bin/tripleo-ansible-inventory install_pbench.yml \
-#     --extra-vars "(...) do_register=true org=<org-id> --activationkey=<activation key> (...)"
+#     --extra-vars "do_register=true org=<org-id> activationkey=<activation key>"
 ---
 - hosts: [ overcloud, undercloud ] # change this if you want to be more granular
   become: true
