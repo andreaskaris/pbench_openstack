@@ -22,6 +22,14 @@
   connection: local
   any_errors_fatal: true  # will need to implement better handling
   tasks:
+  - name:  remove softlink for web-server static
+    file:
+      src: /opt/pbench-web-server/html/static
+      state: absent
+  - name:  create softlink for pbench-agent results
+    file:
+      src: /var/lib/pbench-agent
+      state: absent
   - name: uninstall pbench-web-server
     yum:
       name: pbench-web-server
@@ -36,12 +44,4 @@
   - name: uninstall copr plugin
     yum:
       name: yum-plugin-copr
-      state: absent
-  - name:  remove softlink for web-server static
-    file:
-      src: /opt/pbench-web-server/html/static
-      state: absent
-  - name:  create softlink for pbench-agent results
-    file:
-      src: /var/lib/pbench-agent
       state: absent
