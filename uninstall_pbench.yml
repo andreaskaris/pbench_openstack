@@ -36,3 +36,7 @@
     file:
       src: /tmp/tools-default
       state: absent
+  - name:  remove /var/lib/pbench-agent
+    file:
+      src: /var/lib/pbench-agent
+      state: absent
