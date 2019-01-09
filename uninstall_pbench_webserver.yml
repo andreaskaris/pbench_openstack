@@ -45,3 +45,7 @@
     yum:
       name: yum-plugin-copr
       state: absent
+  - name:  remove /tmp/tools-default
+    file:
+      src: /tmp/tools-default
+      state: absent
