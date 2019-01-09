@@ -60,3 +60,13 @@
     yum:
       name: pbench-web-server
       state: latest
+  - name:  create softlink for web-server static
+    file:
+      src: /opt/pbench-web-server/html/static
+      dest: /var/www/html
+      state: link
+  - name:  create softlink for pbench-agent results
+    file:
+      src: /var/lib/pbench-agent
+      dest: /var/www/html
+      state: link
