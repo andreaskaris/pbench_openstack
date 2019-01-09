@@ -24,11 +24,11 @@
   tasks:
   - name:  remove softlink for web-server static
     file:
-      src: /opt/pbench-web-server/html/static
+      path: /opt/pbench-web-server/html/static
       state: absent
   - name:  create softlink for pbench-agent results
     file:
-      src: /var/lib/pbench-agent
+      path: /var/lib/pbench-agent
       state: absent
   - name: uninstall pbench-web-server
     yum:
@@ -47,9 +47,9 @@
       state: absent
   - name:  remove /tmp/tools-default
     file:
-      src: /tmp/tools-default
+      path: /tmp/tools-default
       state: absent
   - name:  remove /var/lib/pbench-agent
     file:
-      src: /var/lib/pbench-agent
+      path: /var/lib/pbench-agent
       state: absent
